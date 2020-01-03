@@ -10,6 +10,7 @@ namespace Waybill.Mapping.Resolvers
 
         public ComputerWeightResolver(IComputerService computerService) =>_computerService = computerService;
 
-        public int Resolve(ShipmentDTO source, Shipment destination, int destMember, ResolutionContext context) => _computerService.GetComputerWeightByModelNameAsync(source.ModelName).Result;
+        public int Resolve(ShipmentDTO source, Shipment destination, int destMember, ResolutionContext context) => 
+            _computerService.GetComputerWeightByModelNameAsync(source.ModelName).Result;
     }
 }

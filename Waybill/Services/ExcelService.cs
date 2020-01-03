@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
 using OfficeOpenXml;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
-using System.Threading.Tasks;
 using Waybill.Models;
 using Waybill.Services.Interfaces;
 
@@ -18,11 +16,9 @@ namespace Waybill.Services
 
         public List<ShipmentDTO> ReadDataFromSourceFile(string sourceFilePath, int[] range)
         {
-           // return Task.Run(() =>
             {
                 using (ExcelPackage excelPackage = new ExcelPackage(new FileInfo(sourceFilePath)))
                 {
-                    Console.WriteLine("LOL");
                     var worksheet = excelPackage.Workbook.Worksheets[0];
                     var dataFromExcel = new List<ShipmentDTO>();
                     for (int i = range[0]; i <= range[1]; i++)
@@ -47,15 +43,13 @@ namespace Waybill.Services
 
         public void SaveDataToDestinationFile(List<ShipmentDTO> excelData, string destinationFilePath, string savingDirectory)
         {
-            //return Task.Run(() =>
-            //{
                 var incorrectDataIndexes = new List<int>();
                 CheckExcelData(excelData, incorrectDataIndexes);
                 var shipments = _mapper.Map<List<Shipment>>(excelData);
                 using (ExcelPackage excelPackage = new ExcelPackage(new FileInfo(destinationFilePath)))
                 {
                     ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets[0];
-                    for(int i = 6; i < shipments.Count+6; i++)
+                    for(int i = 6; i < shipments.Count+6; i++) //  i = 6 because 1-5 rows are used for template in destination file
                     {
                         worksheet.SetValue(i, 7, shipments[i-6].CompanyName);
                         worksheet.SetValue(i, 8, shipments[i-6].UserName);
@@ -71,10 +65,9 @@ namespace Waybill.Services
                         worksheet.SetValue(i, 21, "Produkcja komputerów");
                         if (incorrectDataIndexes.Contains(i - 6) == true) SetColorForWrongFilledRow(worksheet, i - 6);
                     }
-                excelPackage.SaveAs(new FileInfo(savingDirectory + "\\2.xlsx"));
-                excelPackage.Dispose();
-            }
-          //  });
+                    excelPackage.SaveAs(new FileInfo(savingDirectory + "\\2.xlsm"));
+                    excelPackage.Dispose();
+                }
         }
 
         private void CheckExcelData(List<ShipmentDTO> excelData, List<int> incorrectDataIndexes)
@@ -88,7 +81,7 @@ namespace Waybill.Services
             foreach (PropertyInfo pi in shipmentDTO.GetType().GetProperties())
             {
                 string value = (string)pi.GetValue(shipmentDTO);
-                if (String.IsNullOrEmpty(value)) return true;
+                if (string.IsNullOrEmpty(value)) return true;
             }
             return false;
         }

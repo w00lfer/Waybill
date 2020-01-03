@@ -11,7 +11,7 @@ using Waybill.Services.Interfaces;
 
 namespace Waybill
 {
-    class Program
+    class Waybill
     {
         static void Main(string[] args)
         {
@@ -19,7 +19,7 @@ namespace Waybill
             var serviceProvider = serviceCollection.BuildServiceProvider();
             int[] range = new int[] { 3, 8 };// hardcoded range of rows for first try
             string sourceFilePath = @"C:\Users\apaz02\Desktop\formatka\source.xlsx"; // hardcoded path for first try
-            string destinationFilePath = @"C:\users/apaz02\desktop\formatka\destination.xlsx"; // hardcoded path for first try
+            string destinationFilePath = @"C:\users/apaz02\desktop\formatka\destination.xlsm"; // hardcoded path for first try
             string savingDirectory = @"C:\users\apaz02\desktop\formatka\output"; // hardcoded path for irst try
             CreateFile(sourceFilePath, range, destinationFilePath, savingDirectory, serviceProvider);
         }

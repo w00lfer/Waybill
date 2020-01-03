@@ -12,7 +12,7 @@ namespace Waybill
         public void CreateFile(string sourceFilePath, int[] range, string destinationFilePath, string savingDirectory)
         {
             var excelData =  _excelService.ReadDataFromSourceFile(sourceFilePath, range);
-             _excelService.SaveDataToDestinationFile(excelData, destinationFilePath, savingDirectory);
+            _excelService.SaveDataToDestinationFile(excelData, destinationFilePath, savingDirectory);
         }
 
     }
