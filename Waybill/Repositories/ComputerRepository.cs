@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Waybill.Models;
+using Waybill.Models.AppDbContext;
 using Waybill.Repositories.Interfaces;
 
 namespace Waybill.Repositories

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Waybill.Helpers;
 using Waybill.Services.Interfaces;
 
 namespace Waybill
@@ -9,11 +10,10 @@ namespace Waybill
 
         public ExcelManager(IExcelService excelService) => _excelService = excelService;
 
-        public void CreateFile(string sourceFilePath, int[] range, string destinationFilePath, string savingDirectory)
+        public async Task CreateFile(string sourceFilePath, int[] range, string templateFilePath, string savingDirectory, string senderSettingsPath)
         {
             var excelData =  _excelService.ReadDataFromSourceFile(sourceFilePath, range);
-            _excelService.SaveDataToDestinationFile(excelData, destinationFilePath, savingDirectory);
+            _excelService.SaveDataToDestinationFile(await SettingsReader.GetSenderSettings(senderSettingsPath), excelData, templateFilePath, savingDirectory);
         }
-
     }
 }

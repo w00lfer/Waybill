@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace Waybill.Models
+namespace Waybill.Models.AppDbContext
 {
     public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
         {
@@ -9,7 +9,6 @@ namespace Waybill.Models
             {
                 var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
                 optionsBuilder.UseSqlServer("Server=(local)\\sqlexpress; Database=WaybillDb; Trusted_Connection=True; MultipleActiveResultSets=True");
-
                 return new AppDbContext(optionsBuilder.Options);
             }
         }

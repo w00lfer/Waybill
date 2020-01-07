@@ -1,10 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Waybill.Models;
+using Waybill.Models.AppDbContext;
 using Waybill.Repositories.Interfaces;
 
 namespace Waybill.Repositories

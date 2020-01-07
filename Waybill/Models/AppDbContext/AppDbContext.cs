@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Waybill.Models
+namespace Waybill.Models.AppDbContext
 {
     public class AppDbContext : DbContext
     {

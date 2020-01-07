@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using OfficeOpenXml;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -26,13 +27,12 @@ namespace Waybill.Services
                         dataFromExcel.Add(new ShipmentDTO
                         {
                             CompanyName = worksheet.GetValue<string>(i, 17),
-                            UserName = worksheet.GetValue<string>(i, 13),
+                            UserName = $"{worksheet.GetValue<string>(i, 13)} {worksheet.GetValue<string>(i,12 )}",
                             TelephoneNumber = worksheet.GetValue<string>(i, 15),
                             StreetAddress = worksheet.GetValue<string>(i, 19),
                             City = worksheet.GetValue<string>(i, 18),
                             ModelName = worksheet.GetValue<string>(i, 11),
                             SerialNumber = worksheet.GetValue<string>(i, 8),
-
                         });
                     }
                     worksheet.Dispose();
@@ -41,39 +41,57 @@ namespace Waybill.Services
             }
         }
 
-        public void SaveDataToDestinationFile(List<ShipmentDTO> excelData, string destinationFilePath, string savingDirectory)
+        public void SaveDataToDestinationFile(SenderSettings senderSettings, List<ShipmentDTO> excelData, string templateFilePath, string savingDirectory)
         {
-                var incorrectDataIndexes = new List<int>();
-                CheckExcelData(excelData, incorrectDataIndexes);
-                var shipments = _mapper.Map<List<Shipment>>(excelData);
-                using (ExcelPackage excelPackage = new ExcelPackage(new FileInfo(destinationFilePath)))
+            var incorrectDataRowIndexes =  CheckExcelDataForWrongFilledRows(excelData);
+            var shipments = _mapper.Map<List<Shipment>>(excelData);
+            using (ExcelPackage excelPackage = new ExcelPackage(new FileInfo($@"{savingDirectory}\{DateTime.Today.ToShortDateString()}{excelData[0].UserName}.xlsm"), new FileInfo(templateFilePath)))
+            {
+                ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets[0];
+                worksheet.DataValidations.Clear();
+                for (int i = 6; i < shipments.Count + 6; i++) //  i = 6 because 1-5 rows are used for template in destination file
                 {
-                    ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets[0];
-                    for(int i = 6; i < shipments.Count+6; i++) //  i = 6 because 1-5 rows are used for template in destination file
-                    {
-                        worksheet.SetValue(i, 7, shipments[i-6].CompanyName);
-                        worksheet.SetValue(i, 8, shipments[i-6].UserName);
-                        worksheet.SetValue(i, 9, shipments[i-6].TelephoneNumber);
-                        worksheet.SetValue(i, 11, shipments[i-6].StreetAddress);
-                        worksheet.SetValue(i, 12, shipments[i-6].ZipCode);
-                        worksheet.SetValue(i, 10, shipments[i-6].City);
-                        worksheet.SetValue(i, 7, "1");
-                        worksheet.SetValue(i, 14, shipments[i-6].Weight);
-                        worksheet.SetValue(i, 15, shipments[i-6].ModelName);
-                        worksheet.SetValue(i, 16, shipments[i-6].Price);
-                        worksheet.SetValue(i, 19, shipments[i-6].SerialNumber);
-                        worksheet.SetValue(i, 21, "Produkcja komputerów");
-                        if (incorrectDataIndexes.Contains(i - 6) == true) SetColorForWrongFilledRow(worksheet, i - 6);
-                    }
-                    excelPackage.SaveAs(new FileInfo(savingDirectory + "\\2.xlsm"));
-                    excelPackage.Dispose();
+                    SetSenderData(worksheet, i, senderSettings);
+                    SetReceiverData(worksheet, i, shipments[i - 6]);
+                    if (incorrectDataRowIndexes.Contains(i - 6) == true) SetColorForWrongFilledRow(worksheet, i);
                 }
+                excelPackage.Save();
+            }
         }
 
-        private void CheckExcelData(List<ShipmentDTO> excelData, List<int> incorrectDataIndexes)
+        private void SetSenderData(ExcelWorksheet worksheet, int rowIndex, SenderSettings senderSettings)
         {
+            worksheet.SetValue(rowIndex, 1, senderSettings.CompanyName);
+            worksheet.SetValue(rowIndex, 2, senderSettings.UserName);
+            worksheet.SetValue(rowIndex, 3, senderSettings.TelephoneNumber);
+            worksheet.SetValue(rowIndex, 4, senderSettings.City);
+            worksheet.SetValue(rowIndex, 5, senderSettings.StreetAddress);
+            worksheet.SetValue(rowIndex, 6, senderSettings.ZipCode);
+        }
+
+        private void SetReceiverData(ExcelWorksheet worksheet, int rowIndex, Shipment shipment)
+        {
+            worksheet.SetValue(rowIndex, 7, shipment.CompanyName);
+            worksheet.SetValue(rowIndex, 8, shipment.UserName);
+            worksheet.SetValue(rowIndex, 9, shipment.TelephoneNumber);
+            worksheet.SetValue(rowIndex, 10, shipment.City);
+            worksheet.SetValue(rowIndex, 11, shipment.StreetAddress);
+            worksheet.SetValue(rowIndex, 12, shipment.ZipCode);
+            worksheet.SetValue(rowIndex, 13, "1"); // sets number of packages to 1
+            worksheet.SetValue(rowIndex, 14, shipment.Weight);
+            worksheet.SetValue(rowIndex, 16, shipment.Price);
+            worksheet.SetValue(rowIndex, 15, shipment.ModelName);
+            worksheet.SetValue(rowIndex, 19, shipment.SerialNumber);
+            worksheet.SetValue(rowIndex, 22, "Produkcja komputerów");
+        }
+
+        private List<int> CheckExcelDataForWrongFilledRows(List<ShipmentDTO> excelData)
+        {
+            var incorrectDataRowIndexes = new List<int>();
             for (int i = 0; i < excelData.Count; i++)
-                if (IsAnyNullOrEmpty(excelData[i])) incorrectDataIndexes.Add(i);
+                if (IsAnyNullOrEmpty(excelData[i]))
+                    incorrectDataRowIndexes.Add(i);
+            return incorrectDataRowIndexes;
         }
 
         private bool IsAnyNullOrEmpty(ShipmentDTO shipmentDTO)
@@ -85,6 +103,12 @@ namespace Waybill.Services
             }
             return false;
         }
+
+        /// <summary>
+        /// Sets color for row which has one or more cells empty to let user know about that
+        /// </summary>
+        /// <param name="worksheet"></param>
+        /// <param name="rowIndex"></param>
         private void SetColorForWrongFilledRow(ExcelWorksheet worksheet, int rowIndex)
         {
             worksheet.Row(rowIndex).Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;

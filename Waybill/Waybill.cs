@@ -2,8 +2,10 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Threading.Tasks;
 using Waybill.Mapping;
-using Waybill.Models;
+using Waybill.Models.AppDbContext;
 using Waybill.Repositories;
 using Waybill.Repositories.Interfaces;
 using Waybill.Services;
@@ -13,20 +15,27 @@ namespace Waybill
 {
     class Waybill
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             var serviceCollection = ConfigureServices();
             var serviceProvider = serviceCollection.BuildServiceProvider();
-            int[] range = new int[] { 3, 8 };// hardcoded range of rows for first try
-            string sourceFilePath = @"C:\Users\apaz02\Desktop\formatka\source.xlsx"; // hardcoded path for first try
-            string destinationFilePath = @"C:\users/apaz02\desktop\formatka\destination.xlsm"; // hardcoded path for first try
-            string savingDirectory = @"C:\users\apaz02\desktop\formatka\output"; // hardcoded path for irst try
-            CreateFile(sourceFilePath, range, destinationFilePath, savingDirectory, serviceProvider);
+            Console.WriteLine("Enter rows, seperate each with enter key");
+
+            //int[] range = new int[2];// { int.TryParse(Console.ReadLine(), out int startingIndex = range[0]), int.Parse(Console.ReadLine()) };// hardcoded range of rows for first try
+            if (int.TryParse(Console.ReadLine(), out var firstRowIndex) && int.TryParse(Console.ReadLine(), out var lastRowIndex))
+            {
+                int[] range = { firstRowIndex, lastRowIndex };
+                string sourceFilePath = args[0];
+                string templateFilePath = args[1];
+                string savingDirectory = args[2];
+                string senderSettingsPath = args[3];
+                await Run(sourceFilePath, range, templateFilePath, savingDirectory, senderSettingsPath, new ExcelManager(serviceProvider.GetService<IExcelService>()));
+            }
+            else throw new Exception("Cannot convert given input to Integer");
         }
-        public static void CreateFile(string sourceFilePath, int[] range, string destinationFilePath, string savingDirectory, ServiceProvider serviceProvider)
+        public static async Task Run(string sourceFilePath, int[] range, string templateFilePath, string savingDirectory, string senderSettingsPath, ExcelManager excelManager)
         {
-            var excelManager = new ExcelManager(serviceProvider.GetService<IExcelService>());
-            excelManager.CreateFile(sourceFilePath, range, destinationFilePath, savingDirectory);
+            await excelManager.CreateFile(sourceFilePath, range, templateFilePath, savingDirectory, senderSettingsPath);
         }
         private static IServiceCollection ConfigureServices()
         {
