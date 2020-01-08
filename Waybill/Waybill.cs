@@ -37,7 +37,7 @@ namespace Waybill
 
         private static IServiceCollection ConfigureServices() =>
             new ServiceCollection()
-                .AddDbContext<AppDbContext>(options => options.UseSqlite(@"Data Source=C:\Users\apaz02\source\repos\Waybill\Waybill\waybill.db")) // to be changed
+                .AddDbContext<AppDbContext>(options => options.UseSqlServer("Server=(local)\\sqlexpress; Database=WaybillDb; Trusted_Connection=True; MultipleActiveResultSets=True"))              // to be changed
                 .AddSingleton<IComputerRepository, ComputerRepository>()
                 .AddSingleton<ILocalisationRepository, LocalisationRepository>()
                 .AddSingleton<IComputerService, ComputerService>()

@@ -11,7 +11,7 @@ namespace Waybill.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     ModelName = table.Column<string>(nullable: true),
                     Price = table.Column<int>(nullable: false),
                     Weight = table.Column<int>(nullable: false)
@@ -26,7 +26,7 @@ namespace Waybill.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     City = table.Column<string>(nullable: true),
                     Street = table.Column<string>(nullable: true),
                     ZipCode = table.Column<string>(nullable: true)
