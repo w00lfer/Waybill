@@ -338,3 +338,6 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/Waybill/waybill.db
+/Waybill/waybill.db-shm
+/Waybill/waybill.db-wal

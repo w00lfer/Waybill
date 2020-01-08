@@ -8,7 +8,7 @@ namespace Waybill.Models.AppDbContext
             public AppDbContext CreateDbContext(string[] args)
             {
                 var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
-                optionsBuilder.UseSqlServer("Server=(local)\\sqlexpress; Database=WaybillDb; Trusted_Connection=True; MultipleActiveResultSets=True");
+                optionsBuilder.UseSqlite("Data Source=waybill.db");
                 return new AppDbContext(optionsBuilder.Options);
             }
         }

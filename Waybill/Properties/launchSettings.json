@@ -2,7 +2,7 @@
   "profiles": {
     "Waybill": {
       "commandName": "Project",
-      "commandLineArgs": "C:\\Users\\apaz02\\Desktop\\formatka\\source.xlsx C:\\users/apaz02\\desktop\\formatka\\destination.xlsm C:\\users\\apaz02\\desktop\\formatka\\output C:\\Users\\apaz02\\Desktop\\formatka\\SenderSettings.json"
+      "commandLineArgs": "sourceFilePath templateFilePath savingDirectory SenderSettingsJsonPath"
     }
   }
 }

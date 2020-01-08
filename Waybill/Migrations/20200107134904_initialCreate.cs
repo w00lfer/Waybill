@@ -2,7 +2,7 @@
 
 namespace Waybill.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class initialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,7 +11,7 @@ namespace Waybill.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Sqlite:Autoincrement", true),
                     ModelName = table.Column<string>(nullable: true),
                     Price = table.Column<int>(nullable: false),
                     Weight = table.Column<int>(nullable: false)
@@ -26,7 +26,7 @@ namespace Waybill.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Sqlite:Autoincrement", true),
                     City = table.Column<string>(nullable: true),
                     Street = table.Column<string>(nullable: true),
                     ZipCode = table.Column<string>(nullable: true)

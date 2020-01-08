@@ -20,8 +20,6 @@ namespace Waybill
             var serviceCollection = ConfigureServices();
             var serviceProvider = serviceCollection.BuildServiceProvider();
             Console.WriteLine("Enter rows, seperate each with enter key");
-
-            //int[] range = new int[2];// { int.TryParse(Console.ReadLine(), out int startingIndex = range[0]), int.Parse(Console.ReadLine()) };// hardcoded range of rows for first try
             if (int.TryParse(Console.ReadLine(), out var firstRowIndex) && int.TryParse(Console.ReadLine(), out var lastRowIndex))
             {
                 int[] range = { firstRowIndex, lastRowIndex };
@@ -33,20 +31,18 @@ namespace Waybill
             }
             else throw new Exception("Cannot convert given input to Integer");
         }
-        public static async Task Run(string sourceFilePath, int[] range, string templateFilePath, string savingDirectory, string senderSettingsPath, ExcelManager excelManager)
-        {
+
+        public static async Task Run(string sourceFilePath, int[] range, string templateFilePath, string savingDirectory, string senderSettingsPath, ExcelManager excelManager) =>
             await excelManager.CreateFile(sourceFilePath, range, templateFilePath, savingDirectory, senderSettingsPath);
-        }
-        private static IServiceCollection ConfigureServices()
-        {
-            return new ServiceCollection()
-                .AddDbContext<AppDbContext>(options => options.UseSqlServer("Server=(local)\\sqlexpress; Database=WaybillDb; Trusted_Connection=True; MultipleActiveResultSets=True"))
+
+        private static IServiceCollection ConfigureServices() =>
+            new ServiceCollection()
+                .AddDbContext<AppDbContext>(options => options.UseSqlite(@"Data Source=C:\Users\apaz02\source\repos\Waybill\Waybill\waybill.db")) // to be changed
                 .AddSingleton<IComputerRepository, ComputerRepository>()
                 .AddSingleton<ILocalisationRepository, LocalisationRepository>()
                 .AddSingleton<IComputerService, ComputerService>()
                 .AddSingleton<ILocalisationService, LocalisationService>()
                 .AddSingleton<IExcelService, ExcelService>()
                 .AddAutoMapper(typeof(MappingProfile));
-        }
     }
 }   
