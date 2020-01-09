@@ -82,7 +82,7 @@ namespace Waybill.Services
             worksheet.SetValue(rowIndex, 16, shipment.Price);
             worksheet.SetValue(rowIndex, 15, shipment.ModelName);
             worksheet.SetValue(rowIndex, 19, shipment.SerialNumber);
-            worksheet.SetValue(rowIndex, 22, "Produkcja komputerów");
+            worksheet.SetValue(rowIndex, 22, "Department name");
         }
 
         private List<int> CheckExcelDataForWrongFilledRows(List<ShipmentDTO> excelData)
@@ -104,11 +104,7 @@ namespace Waybill.Services
             return false;
         }
 
-        /// <summary>
-        /// Sets color for row which has one or more cells empty to let user know about that
-        /// </summary>
-        /// <param name="worksheet"></param>
-        /// <param name="rowIndex"></param>
+        // Sets color for row which has one or more cells empty to let user know about that
         private void SetColorForWrongFilledRow(ExcelWorksheet worksheet, int rowIndex)
         {
             worksheet.Row(rowIndex).Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
