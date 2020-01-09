@@ -27,11 +27,11 @@ I have built this application using:
 <!-- GETTING STARTED -->
 ## Getting Started
 
-How to use application
+In ```properties``` of project click ```debug``` and set arguments```sourceFilePath``` to path of downloaded ```SourceFile.xlsx```, ```templateFilePath``` to path of downloaded ```TemplateFile.xlsx``` and ```savingDirectory``` to saving directory which in you want to have created files and ```SenderSettingsJsonPath``` to path of downloaded ```SenderSettings.json```
 
 ## Usage
 
-In ```properties``` of project click ```debug``` and set arguments```sourceFilePath``` to path of downloaded ```SourceFile.xlsx```, ```templateFilePath``` to path of downloaded ```TemplateFile.xlsx``` and ```savingDirectory``` to saving directory which in you want to have created files and ```SenderSettingsJsonPath``` to path of downloaded ```SenderSettings.json```. Run the application, set first row and last row and then file will be created. 
+Run the application, set range of rows to be copied from source file and then file will be created. 
 
 <!-- CONTACT -->
 ## Contact
