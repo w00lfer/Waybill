@@ -19,7 +19,9 @@ Application was made to make work of my friends from old department much easier 
 ### Built With
 I have built this application using:
 * [.NET Core 3.1](https://docs.microsoft.com/pl-pl/dotnet/core/) - console application
-* [EPPLUS](https://github.com/JanKallman/EPPlus) - to deal with excel files with quick and easy way.
+* [Entity Framework Core](https://docs.microsoft.com/pl-pl/ef/core/) 
+* [AutoMapper](https://automapper.org) 
+* [EPPLUS](https://github.com/JanKallman/EPPlus) - To work with excel files
 
 
 <!-- GETTING STARTED -->
